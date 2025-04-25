@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>quote</title>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+</head>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #b7bec4;
+      text-align: center;
+      padding: 50px;
+    }
+    #quote {
+      font-size: 1.5em;
+      margin: 20px;
+      color: #333;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    #favorites {
+      margin-top: 20px;
+      background: #fff;
+      padding: 20px;
+      border: 1px solid #0e0d0d;
+      
+
+    }
+    h2 {
+      color: #007acc;
+    }
+
+  </style>
+<body>
+    <h1 class="animate__animated animate__backInLeft animate__delay-0s">Random Quote Generator</h1>
+    <div id="quote">Click the button to get a quote!</div>
+    <button onclick="getRandomQuote()">New Quote</button>
+    <button onclick="saveFavorite()">Save to Favorites</button>
+    <button onclick="clearFavorites()">Clear Favorites</button>
+  
+    <div id="favorites">
+      <h2>Favorite Quotes</h2>
+      <ul id="favoriteList"></ul>
+    </div>
+    <button onclick="window.print()"> print this file</button>
+    <script>
+      const quotes = [
+        "The only way to do great work is to love what you do. – Steve Jobs",
+        "Success is not in what you have, but who you are. – Bo Bennett",
+        "Believe you can and you're halfway there. – Theodore Roosevelt",
+        "Don't watch the clock; do what it does. Keep going. – Sam Levenson",
+        "Dream big and dare to fail. – Norman Vaughan"
+      ];
+  
+      let currentQuote = "";  // Variable to hold the currently displayed quote
+  
+      function getRandomQuote() {  // Function to select and display a random quote from the array
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        currentQuote = quotes[randomIndex];   // Save selected quote
+        document.getElementById("quote").innerText = currentQuote;  // Show on screen
+      }
+    // Function to save the current quote to localStorage
+      function saveFavorite() {
+        if (!currentQuote) return; // Don't save if no quote selected yet
+        let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        if (!favorites.includes(currentQuote)) {   // Check if the quote is not already saved
+          favorites.push(currentQuote);   // Add new quote
+          localStorage.setItem("favorites", JSON.stringify(favorites));// Save back to localStorage
+          showFavorites();// Refresh display
+        }
+      }
+   // Function to show all saved favorite quotes in the list
+      function showFavorites() {
+        let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        const list = document.getElementById("favoriteList");
+        list.innerHTML = "";  // Clear existing list first
+        favorites.forEach(q => {  // Add each saved quote to the list
+          const li = document.createElement("li");
+          li.textContent = q;
+          list.appendChild(li);
+        });
+      }
+  
+      // New function to clear favorites
+      function clearFavorites() {
+        if (confirm("Are you sure you want to clear all favorite quotes?")) {
+          localStorage.removeItem("favorites");
+          showFavorites(); // Refresh the displayed list
+        }
+      }
+  
+      // Load favorites on page load
+      window.onload = showFavorites;
+    </script>  
+</body>
+   
+</html>
